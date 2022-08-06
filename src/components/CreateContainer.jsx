@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+import  { storage } from '../firebase.config'
 
 import { 
   MdFastfood, 
@@ -10,6 +11,10 @@ import {
 } from 'react-icons/md';
 import { categories } from '../utils/data';
 import Loader from './Loader';
+import { deleteObject, getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
+import { getAllFoodItems, saveItem } from '../utils/firebaseFunctions';
+import { useStateValue } from '../context/StateProvider';
+import { actionType } from '../context/reducer';
 
 const CreateContainer = () => {
 
@@ -22,14 +27,116 @@ const CreateContainer = () => {
   const [alertStatus, setAlertStatus] = useState("danger");
   const [msg, setMsg] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [{ foodItems }, dispatch] = useStateValue();
 
-  const uploadImage =() => {
+  const uploadImage =(e) => {
+    setIsLoading(true);
+    const imageFile = e.target.files[0]; //since we are uploading only one image we are using index 0.
+    const storageRef = ref(storage, `Images/${Date.now()}-${imageFile.name}}`)
+    const uploadTask = uploadBytesResumable(storageRef, imageFile); //A resumable upload allows you to resume data transfer operations to Cloud Storage after a communication failure has interrupted the flow of data.
 
-  }
+    uploadTask.on('state_changed', (snapshot) => {  //to track the upload progress.
+      const uploadProgress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+    }, (error) => {
+      console.log(error);
+      setFields(true);
+      setMsg('Error while uploading : Try Again 🙇');
+      setAlertStatus('danger');
+      setTimeout(() => {
+        setFields(false);
+        setIsLoading(false);
+      }, 4000);
+    }, () => {
+      getDownloadURL(uploadTask.snapshot.ref).then(downloadURL => {
+        setImageAsset(downloadURL);
+        setIsLoading(false);
+        setFields(true);
+        setMsg('Image uploaded successfully👍');
+        setAlertStatus('success');
+        setTimeout(() => {
+          setFields(false);
+        },4000);
+      })
+    }) 
+  };
 
-  const deleteImage = () => {}
+  const deleteImage = () => {
+    setIsLoading(true);
+    const deleteReef = ref(storage, imageAsset);
+    deleteObject(deleteReef).then(() => {
+      setImageAsset(null);
+      setIsLoading(false);
+      setFields(true);
+      setMsg('Image deleted successfully👍');
+        setAlertStatus('success');
+        setTimeout(() => {
+          setFields(false);
+        },4000);
+    })
+  };
 
-  const saveDetails = () => {}
+  const saveDetails = () => {
+    setIsLoading(true);
+    try {
+      if((!title || !calories || !imageAsset || !price || !categories)) {
+        setFields(true);
+      setMsg('Please fill all the fields');
+      setAlertStatus('danger');
+      setTimeout(() => {
+        setFields(false);
+        setIsLoading(false);
+      }, 4000);
+      } else {
+        const data = {
+          id : `${Date.now()}`,
+          title : title,
+          imageURL : imageAsset,
+          category : category,
+          calories : calories,
+          qty : 1,
+          price : price,
+        }
+        saveItem(data)
+        setIsLoading(false);
+        setFields(true);
+        setMsg('Data uploaded successfully👍');
+        clearData();
+        setAlertStatus('success');
+        setTimeout(() => {
+          setFields(false);
+        },4000);
+      }
+      
+    } catch (error) {
+      console.log(error);
+      setFields(true);
+      setMsg('Error while uploading : Try Again 🙇');
+      setAlertStatus('danger');
+      setTimeout(() => {
+        setFields(false);
+        setIsLoading(false);
+      }, 4000);
+    }
+    fetchData()
+  };
+
+  const clearData = () => {
+    setTitle('');
+    setImageAsset(null);
+    setCalories('');
+    setPrice('');
+    setCategory('Select Category');
+  };
+
+  const fetchData = async () => {
+    await getAllFoodItems()
+    .then(data => {
+      dispatch({
+        type : actionType.SET_FOOD_ITEMS,
+        foodItems : data
+      });
+    });
+  };
 
   return (
     <div className='w-full min-h-screen flex items-center justify-center'>

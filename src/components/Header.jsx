@@ -27,9 +27,9 @@ const Header = () => {
       type : actionType.SET_USER,
       user : providerData[0],
     });
-    localStorage.setItem('user', JSON.stringify(providerData[0]));  //setting the user data to localStorage so that when we refresh we still have the user data in localStorage.
+    localStorage.setItem('user', JSON.stringify(providerData[0])); //setting the user data to localStorage so that when we refresh we still have the user data in localStorage.
     } else {
-      setIsMenu(!isMenu)
+      setIsMenu(!isMenu);
     }
   };
 
@@ -71,7 +71,8 @@ const Header = () => {
               </div>
             </div>
             
-            <div className='relative'>
+            <div className='relative' onClick={() => {login(); 
+                  setIsMenu(!isMenu)}}>
               <motion.img 
                 whileTap={{scale : 0.6 }} 
                 src={user ? user.photoURL : Avatar} 
@@ -117,7 +118,8 @@ const Header = () => {
             <p className='text-headingColor text-xl font-bold '>City</p>
           </Link>
 
-          <div className='relative rounded-xl '>
+          <div className='relative rounded-xl ' onClick={() => {login(); 
+                  setIsMenu(!isMenu)}}>
               <motion.img 
                 whileTap={{scale : 0.6 }} 
                 src={user ? user.photoURL : Avatar} 

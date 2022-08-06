@@ -43,13 +43,14 @@ const HomeContainer = () => {
                     <p className='text-[12px] lg:text-sm text-lightTextGray font-semibold my-1 lg:my-3'>{n.decp}</p>
 
                     <p className=' text-sm font-semibold text-headingColor'>
-                        <span className=' text-s text-red-600'>$</span> {n.price}</p>
+                        <span className=' text-s text-red-600'>$</span> {n.price}
+                        </p>
                 </div>
                 ))}
             </div>
       </div>
     </section>
-  )
-}
+  );
+};
 
 export default HomeContainer;

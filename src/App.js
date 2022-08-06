@@ -1,11 +1,30 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Route, Routes } from 'react-router';
 import { Header } from './components';
 import { AnimatePresence } from 'framer-motion';
 import { CreateContainer, MainContainer } from './components';
+import { useStateValue } from './context/StateProvider';
+import { getAllFoodItems } from './utils/firebaseFunctions';
+import { actionType } from './context/reducer';
 
 
 const App = () => {
+  const [{ foodItems }, dispatch] = useStateValue();
+
+  const fetchData = async () => {
+    await getAllFoodItems()
+    .then(data => {
+      dispatch({
+        type : actionType.SET_FOOD_ITEMS,
+        foodItems : data
+      })
+    });
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   return (
 
 <AnimatePresence exitBeforeEnter> {/* By wraping everything inside AnimatePresense it makes this whole component have the animations and we need not import this on every component so we are adding it here in the top level component */}
