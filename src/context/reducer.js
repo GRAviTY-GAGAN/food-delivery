@@ -1,6 +1,7 @@
 export const actionType = {
     SET_USER : 'SET_USER',  // if we want to update the user information we call SET_USER action type and update it.
     SET_FOOD_ITEMS: 'SET_FOOD_ITEMS',
+    SET_CART_SHOW: 'SET_CART_SHOW',
 };
 
 const reducer = (state, action) => {
@@ -17,6 +18,12 @@ const reducer = (state, action) => {
             return {
                 ...state,
                 foodItems: action.foodItems,
+            };
+
+        case actionType.SET_CART_SHOW:
+            return {
+                ...state,
+                cartShow: action.cartShow,
             };
             
         default :

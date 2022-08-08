@@ -3,14 +3,30 @@ import { MdOutlineKeyboardBackspace } from 'react-icons/md';
 import { RiRefreshFill }from 'react-icons/ri';
 import { motion } from 'framer-motion';
 import { BiMinus, BiPlus } from 'react-icons/bi'
+import { useStateValue } from '../context/StateProvider';
+import { actionType } from '../context/reducer';
 
 const CartContainer = () => {
+
+  const [ { cartShow }, dispatch ] = useStateValue();
+
+  const showcart = () => {
+    dispatch({
+        type: actionType.SET_CART_SHOW,
+        cartShow: !cartShow,
+    });
+  };
+
+
   return (
-    <div 
+    <motion.div 
+      initial={{opacity: 0, x: 200}}
+      animate={{opacity: 1, x: 0}}
+      exit={{opacity: 0, x: 200}}
       className='fixed top-0 right-0 w-full md:w-375 h-screen bg-white drop-shadow-md flex flex-col z-[101]'>
 
         <div className='w-full flex items-center justify-between p-4 cursor-pointer'>
-            <motion.div whileTap={{scale : 0.75 }}>
+            <motion.div whileTap={{scale : 0.75 }} onClick={showcart}>
                 <MdOutlineKeyboardBackspace className='text-textColor text-3xl' />
 
             </motion.div>
@@ -81,17 +97,17 @@ const CartContainer = () => {
                     <p className=' text-gray-200 text-xl font-semibold'>$11.5</p>
                 </div>
 
-                <motion.div 
+                <motion.button
                   whileTap={{ scale: 0.8}}
                   type='button'
-                  className='w-full p-2 rounded-full bg-gradient-to-tr from-orange-400 to-orange-600 text-gray-50 text-lg my-2 hover:shadow-lg transition-all duration-150 ease-out text-center'
+                  className='w-full p-2 rounded-full bg-gradient-to-tr from-orange-400 to-orange-600 text-gray-50 text-lg my-2 hover:shadow-lg text-center'
                 >
                     Check Out
-                </motion.div>
+                </motion.button>
             </div>
         </div>
-    </div>
-  )
-}
+    </motion.div>
+  );
+};
 
 export default CartContainer;
