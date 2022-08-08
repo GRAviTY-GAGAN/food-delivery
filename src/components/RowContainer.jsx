@@ -29,7 +29,7 @@ const RowContainer = ({ flag, data, scrollValue}) => {
             >
               <img  
                 src={item?.imageURL}
-                alt="" 
+                alt="food item" 
                 className='w-full h-full object-contain'
               />
             </motion.div>
@@ -42,7 +42,7 @@ const RowContainer = ({ flag, data, scrollValue}) => {
           </div>
 
           <div className='w-full flex flex-col items-end justify-end -mt-8'>
-            <p className=' text-textColor font-semibold text-base md:text-lg'>
+            <p className=' text-textColor font-semibold text-base md:text-lg z-10'>
               {item?.title}
             </p>
             <p className='mt-1 text-sm text-gray-500'>{item?.calories} Calories</p>
@@ -56,7 +56,7 @@ const RowContainer = ({ flag, data, scrollValue}) => {
         )) 
         ) : (
         <div className='w-full flex items-center justify-center'>
-          <img src={NotFound} className='h-340'/>
+          <img src={NotFound} alt='Not found' className='h-340'/>
           <p className='text-xl text-headingColor font-semibold my-2'>Items Not Available</p>
         </div>
         )}

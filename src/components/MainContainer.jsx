@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import HomeContainer from './HomeContainer';
 import { motion } from 'framer-motion';
 import { MdChevronLeft, MdChevronRight } from 'react-icons/md';
-import { RowContainer, MenuContainer } from '.';
+import { RowContainer, MenuContainer, CartContainer } from '.';
 import { useStateValue } from '../context/StateProvider';
 
 const MainContainer = () => {
@@ -44,6 +44,8 @@ const MainContainer = () => {
       </section>
 
       <MenuContainer />
+
+      <CartContainer />
     </div>
   )
 }
