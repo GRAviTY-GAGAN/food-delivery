@@ -5,10 +5,11 @@ import { motion } from 'framer-motion';
 import { BiMinus, BiPlus } from 'react-icons/bi'
 import { useStateValue } from '../context/StateProvider';
 import { actionType } from '../context/reducer';
+import EmptyCart from '../Img/emptyCart.svg';
 
 const CartContainer = () => {
 
-  const [ { cartShow }, dispatch ] = useStateValue();
+  const [ { cartShow, cartItems, user }, dispatch ] = useStateValue();
 
   const showcart = () => {
     dispatch({
@@ -43,13 +44,16 @@ const CartContainer = () => {
         </div>
 
         {/* bottom section */}
-        <div className='w-full h-full bg-cartBg rounded-t-[2rem] flex flex-col'>
+        { cartItems && cartItems.length > 0 ? (
+            <div className='w-full h-full bg-cartBg rounded-t-[2rem] flex flex-col'>
             {/* cart items section */}
             <div className='w-full h-340 md:h-42 px-6 py-10 flex flex-col gap-3 overflow-y-scroll scrollbar-none'>
                 {/* cart item */}
-                <div className='w-full p-1 px-2 rounded-lg bg-cartItem flex items-center gap-2'>
+                {
+                    cartItems && cartItems.map(item => (
+                        <div key={item.id} className='w-full p-1 px-2 rounded-lg bg-cartItem flex items-center gap-2'>
                     <img 
-                      src="https://firebasestorage.googleapis.com/v0/b/food-delivery-app-622d7.appspot.com/o/Images%2F1659446898854-fi5.png%7D?alt=media&token=1ca895ba-8129-4985-94e9-cb1cf0c286b7" 
+                      src={item?.imageURL} 
                       alt="food item" 
                       className='w-20 h-20 max-w-[60px]'
                       />
@@ -57,10 +61,10 @@ const CartContainer = () => {
                       {/* name section */}
                       <div className='flex flex-col gap-2'>
                         <p className='text-base text-gray-50'>
-                            Chocolate Vanilla
+                            {item?.title}
                         </p>
                         <p className='text-sm block text-gray-300 font-semibold'>
-                            $8.5
+                            ${item?.price}
                         </p>
                       </div>
 
@@ -70,13 +74,15 @@ const CartContainer = () => {
                             <BiMinus className='text-gray-50' />
                         </motion.div>
                         <p className='w-5 h-5 rounded-sm bg-cartBg text-gray-50 flex items-center justify-center'>
-                            1
+                            {item.qty}
                         </p>
                         <motion.div whileTap={{ scale: 0.75 }}>
                             <BiPlus className='text-gray-50' />
                         </motion.div>
                       </div>
                 </div>
+                    ))
+                }
             </div>
 
             {/* cart total section */}
@@ -97,6 +103,7 @@ const CartContainer = () => {
                     <p className=' text-gray-200 text-xl font-semibold'>$11.5</p>
                 </div>
 
+                { user ? (
                 <motion.button
                   whileTap={{ scale: 0.8}}
                   type='button'
@@ -104,8 +111,26 @@ const CartContainer = () => {
                 >
                     Check Out
                 </motion.button>
+                ) : (
+                    <motion.button
+                  whileTap={{ scale: 0.8}}
+                  type='button'
+                  className='w-full p-2 rounded-full bg-gradient-to-tr from-orange-400 to-orange-600 text-gray-50 text-lg my-2 hover:shadow-lg text-center'
+                >
+                    Login to Check out
+                </motion.button>
+                )}
             </div>
         </div>
+        ) : (
+            <div className='w-full h-full flex flex-col items-center justify-center gap-6'>
+                <img src={EmptyCart} classname='w-300' alt="Empty Cart" />
+                <p className=' text-xl text-textColor font-semibold'>
+                    Add some items to your cart
+                </p>
+            </div>
+        )}
+        
     </motion.div>
   );
 };

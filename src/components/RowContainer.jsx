@@ -1,13 +1,34 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { MdShoppingBasket } from 'react-icons/md';
 import { motion } from 'framer-motion';
 import NotFound from '../Img/NotFound.svg';
+import { useStateValue } from '../context/StateProvider';
+import { actionType } from '../context/reducer';
 
 const RowContainer = ({ flag, data, scrollValue}) => {
   const rowContainer = useRef();
+
+  const [items, setItems] = useState([]);
+
+  const [{ cartItems }, dispatch] = useStateValue();
+
+  const addtocart = () => {
+    dispatch({
+      type : actionType.SET_CART_ITEMS,
+      cartItems : items,
+    });
+    localStorage.setItem("cartItems", JSON.stringify(items));
+  };
+
   useEffect(() => {
     rowContainer.current.scrollLeft += scrollValue;
-  },[scrollValue])
+  },[scrollValue]);
+
+  useEffect(() => {
+    addtocart(); 
+  }, [items]);
+// we have kept addtocart as a seperate function and created a seperate state and pushing the details to the state whenever the state changes i.e. [items] in useEffect we are calling addtocart inside the useEffect method. 
+
   return (
     <div 
       ref={rowContainer}
@@ -36,6 +57,7 @@ const RowContainer = ({ flag, data, scrollValue}) => {
             <motion.div 
               whileTap={{ scale : 0.75 }} 
               className='w-8 h-8 rounded-full bg-red-600  flex items-center justify-center cursor-pointer hover:shadow-md -mt-8'
+              onClick={() => setItems([...cartItems, item])}
             >
                 <MdShoppingBasket className='text-white' />
             </motion.div>
