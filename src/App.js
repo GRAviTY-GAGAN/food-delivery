@@ -1,8 +1,7 @@
 import React, { useEffect } from 'react';
-import { Route, Routes } from 'react-router';
-import { Header } from './components';
+import { Route, Routes } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
-import { CreateContainer, MainContainer } from './components';
+import { CreateContainer, Header, MainContainer } from './components';
 import { useStateValue } from './context/StateProvider';
 import { getAllFoodItems } from './utils/firebaseFunctions';
 import { actionType } from './context/reducer';
@@ -13,11 +12,11 @@ const App = () => {
 
   const fetchData = async () => {
     await getAllFoodItems()
-    .then(data => {
+    .then((data) => {
       dispatch({
         type : actionType.SET_FOOD_ITEMS,
-        foodItems : data
-      })
+        foodItems: data,
+      });
     });
   };
 

@@ -50,7 +50,7 @@ const RowContainer = ({ flag, data, scrollValue}) => {
             >
               <img  
                 src={item?.imageURL}
-                alt="food item" 
+                alt="" 
                 className='w-full h-full object-contain'
               />
             </motion.div>
